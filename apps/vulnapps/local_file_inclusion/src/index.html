@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base action>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Web Fetcher</title>
+</head>
+
+<body class="flex flex-col gap-10 w-screen h-screen items-center">
+    <div class="w-screen justify-center text-center gap-3">
+        <p class="text-5xl pb-6">Web Fetcher</p>
+        <form class="flex flex-col items-center gap-3" id="submit-form">
+            <input class="text-center text-black w-[60%]" type="text" name="q" id="q" placeholder="https://google.com">
+            <button type="submit">submit</button>
+        </form>
+    </div>
+    <div id="container" class="overflow-auto w-[50%] h-[55%] text-center">
+    </div>
+    <div class="align-bottom text-center">local file inclusion</div>
+    <script>
+        const submit = document.getElementById("submit-form")
+        submit.addEventListener("submit", (e) => {
+            e.preventDefault()
+            const url = document.getElementById("q").value
+            fetch("", {
+                method: "POST",
+                headers: {
+                    "Content-Type":"application/json"
+                },
+                body: JSON.stringify({url})
+            }).then((res)=>res.text().then(text=>{
+                document.getElementById("container").innerText = text
+            }))
+        })
+    </script>
+</body>
+
+</html>

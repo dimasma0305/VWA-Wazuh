@@ -1,0 +1,45 @@
+FROM golang:alpine as builder
+
+LABEL maintainer="Dimas <dimasmaulana0305@gmail.com>"
+
+WORKDIR /app
+
+COPY ./src/go.mod ./src/go.sum ./
+
+RUN go mod download -x
+
+COPY ./src .
+
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
+
+FROM ubuntu:latest
+
+# ========================= setup wazuh =========================
+RUN apt update -y &&\
+    apt upgrade -y
+RUN apt install -y \
+    sudo curl gpg systemctl
+# add wazuh repo
+RUN curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | gpg --no-default-keyring --keyring gnupg-ring:/usr/share/keyrings/wazuh.gpg --import && chmod 644 /usr/share/keyrings/wazuh.gpg
+RUN echo "deb [signed-by=/usr/share/keyrings/wazuh.gpg] https://packages.wazuh.com/4.x/apt/ stable main" | tee -a /etc/apt/sources.list.d/wazuh.list
+RUN apt update -y
+# install wazuh-agent
+RUN WAZUH_MANAGER="wazuh.manager" \
+    WAZUH_AGENT_GROUP='default' \
+    apt-get install wazuh-agent -y
+# start wazuh service
+RUN systemctl daemon-reload && \
+    systemctl enable wazuh-agent
+# Install netstat
+RUN apt-get install net-tools -y
+# ========================= setup wazuh =========================
+
+WORKDIR /root/
+
+COPY --from=builder /app/main .
+COPY --from=builder /app/index.html .
+RUN mkdir /var/log/app/
+
+EXPOSE 8000
+
+CMD systemctl start wazuh-agent && ./main

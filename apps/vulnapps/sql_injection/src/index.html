@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Searcher</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<head>
+
+<body>
+    <div class="middle">
+        <form class="search-box" action="/" method="post">
+            <input type="text" class="input" id="search" name="search">
+            <button type="button" class="btn" name="button"></button>
+        </form>
+        <div id="data"></div>
+    </div>
+    <div class="align-bottom text-center">SQL Injection</div>
+</body>
+<script>
+    $(".btn").on("click", function () {
+        $(".input").toggleClass("inclicked");
+        $(".btn").toggleClass("close");
+    })
+    $("form").submit(function (event) {
+        event.preventDefault()
+        var formData = {
+            search: $("#search").val(),
+        };
+        $.ajax({
+            type: "POST",
+            url: "",
+            data: formData,
+            dataType: "json",
+            encode: true,
+        }).done(function (data) {
+            console.log(data)
+            $("#data").html("<br/>"+data.Title+"<br/>"+data.Author)
+        }).fail(function (data){
+            alert(JSON.parse(data.responseText).message)
+        });
+    })
+</script>
+
+</html>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: rgba(0, 5, 10, 1);
+        color: white;
+    }
+    #data{
+        color: white;
+        }
+    .middle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .input {
+        width: 60px;
+        height: 60px;
+        background: none;
+        border-radius: 50px;
+        border: 4px solid #fff;
+        box-sizing: border-box;
+        outline: none;
+        transition: width 0.4s ease-in-out,
+            border-radius 0.8s ease-in-out,
+            padding 0.2s;
+        transition-delay: 0.4s;
+        color: white;
+        font-size: 20px;
+    }
+
+    .inclicked {
+        width: 360px;
+        border-radius: 0;
+        padding: 0 15px;
+        padding-right: 40px;
+    }
+
+    .btn {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        top: 0;
+        right: 0;
+        box-sizing: border-box;
+        background: none;
+        border: none;
+        outline: none;
+        cursor: pointer;
+    }
+
+    .btn::before {
+        content: "";
+        width: 4px;
+        height: 25px;
+        background: white;
+        position: absolute;
+        transform: rotate(-45deg);
+        bottom: -16px;
+        right: -6px;
+        transition: 0.3s;
+    }
+
+    .close::before,
+    .close::after {
+        content: "";
+        width: 4px;
+        height: 34px;
+        background: white;
+        position: absolute;
+        bottom: 12px;
+        right: 28px;
+    }
+
+    .close::before {
+        transform: rotate(-45deg);
+    }
+
+    .close::after {
+        transform: rotate(45deg);
+    }
+</style>

@@ -1,0 +1,44 @@
+FROM php:fpm
+
+# ========================= setup wazuh =========================
+# add local repo
+COPY sources.list /etc/apt/
+RUN apt update -y &&\
+    apt upgrade -y
+RUN apt install -y \
+    sudo curl gpg systemctl
+# add wazuh repo
+RUN curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | gpg --no-default-keyring --keyring gnupg-ring:/usr/share/keyrings/wazuh.gpg --import && chmod 644 /usr/share/keyrings/wazuh.gpg
+RUN echo "deb [signed-by=/usr/share/keyrings/wazuh.gpg] https://packages.wazuh.com/4.x/apt/ stable main" | tee -a /etc/apt/sources.list.d/wazuh.list
+RUN apt update -y
+# Install netstat
+RUN apt-get install net-tools -y
+# install wazuh-agent
+RUN WAZUH_MANAGER="wazuh.manager" \
+    WAZUH_AGENT_GROUP='default' \
+    apt-get install wazuh-agent -y
+# Copy wazuh config
+COPY local_internal_options.conf /var/ossec/etc/local_internal_options.conf
+# start wazuh service
+RUN systemctl daemon-reload && \
+    systemctl enable wazuh-agent
+# ========================= setup wazuh =========================
+
+# setup php.ini
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
+# setup php file
+WORKDIR /var/www/html
+COPY ./app .
+RUN chown www-data:www-data ./files
+
+# make log folder
+RUN mkdir /var/log/app/ && \
+    chown www-data:www-data /var/log/app/
+
+# default service port for php-fpm
+EXPOSE 9000 
+
+# start services
+CMD systemctl start wazuh-agent && \
+    php-fpm

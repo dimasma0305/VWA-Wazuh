@@ -1,0 +1,30 @@
+<group name="php">
+    <rule id="100001" level="13">
+        <regex>file \w+.php uploaded from ip \d+.\d+.\d+.\d+</regex>
+        <description>PHP extension file uploaded</description>
+    </rule>
+</group>
+
+<group name="SSTI">
+    <rule id="101001" level="13">
+        <regex>GET \.+q=\.+os.popen\(\.+\)</regex>
+        <description>Python SSTI payload detected</description>
+         <mitre>
+            <id>T1221</id>
+        </mitre>
+    </rule>
+</group>
+
+<group name="LFI">
+    <rule id="102001" level="13">
+        <regex>"url":"file://\.+"</regex>
+        <description>Local file inclusion detected</description>
+    </rule>
+</group>
+
+<group name="SQLI">
+    <rule id="103001" level="13" ignore="10">
+        <regex>sqlmap/\.+\(https://sqlmap.org\)</regex>
+        <description>sqlmap Agent detected</description>
+    </rule>
+</group>

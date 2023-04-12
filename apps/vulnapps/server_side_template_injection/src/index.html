@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base action>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Calculator</title>
+</head>
+
+<body class="flex flex-col gap-10 w-screen h-screen max-h-screen items-center">
+    <div class="w-screen justify-center text-center gap-3">
+        <p class="text-5xl pb-6">Calculator</p>
+        <form class="flex flex-col items-center gap-3" action="" method="GET">
+            <input class="text-center text-black w-[60%]" type="text" name="q" id="q">
+            <button type="submit">submit</button>
+        </form>
+    </div>
+    <div class="overflow-auto w-[50%] h-[55%] text-center">
+        {{$CONTEXT}}
+    </div>
+    <div class="align-bottom text-center">server side template injection</div>
+</body>
+
+</html>

@@ -1,0 +1,33 @@
+FROM nginx:latest
+
+# ========================= setup wazuh =========================
+# add local repo
+COPY sources.list /etc/apt/
+RUN apt update -y &&\
+    apt upgrade -y
+RUN apt install -y \
+    sudo curl gpg systemctl
+# add wazuh repo
+RUN curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | gpg --no-default-keyring --keyring gnupg-ring:/usr/share/keyrings/wazuh.gpg --import && chmod 644 /usr/share/keyrings/wazuh.gpg
+RUN echo "deb [signed-by=/usr/share/keyrings/wazuh.gpg] https://packages.wazuh.com/4.x/apt/ stable main" | tee -a /etc/apt/sources.list.d/wazuh.list
+RUN apt update -y
+# install wazuh-agent
+RUN WAZUH_MANAGER="wazuh.manager" \
+    WAZUH_AGENT_GROUP='default' \
+    apt-get install wazuh-agent -y
+# start wazuh service
+RUN systemctl daemon-reload && \
+    systemctl enable wazuh-agent
+
+# Install netstat
+RUN apt-get install net-tools -y
+# ========================= setup wazuh =========================
+
+ADD default.conf /etc/nginx/conf.d
+COPY frontend /var/www/frontend
+
+EXPOSE 80
+
+# start services
+CMD systemctl start wazuh-agent && \
+    nginx -g "daemon off;"

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base action>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Vuln Apps</title>
+</head>
+
+<body class="flex flex-col gap-10 w-screen h-screen items-center">
+    <nav class="flex flex-row gap-5 p-4 border-white border">
+        <a onclick="defaultpage()" href="#">home</a>
+        <a onclick="changeframe('/upload/')" href="#">upload</a>
+        <a onclick="changeframe('/calculator/')" href="#">calculator</a>
+        <a onclick="changeframe('/fetcher/')" href="#">fetcher</a>
+        <a onclick="changeframe('/sqli/')" href="#">sqli</a>
+    </nav>
+
+    <div id="container" class="h-full w-full text-center">
+    </div>
+
+    <script>
+        const homepage = `<p class="text-6xl">Vuln Web Apps</p><p>by: blue team 13</p>`
+        defaultpage()
+        function changeframe(url) {
+            const container = document.getElementById("container")
+            const frame = document.createElement("iframe")
+            frame.src = url
+            frame.width = "100%"
+            frame.height = "100%"
+            container.innerHTML = frame.outerHTML
+        }
+        function defaultpage() {
+            const container = document.getElementById("container")
+            container.innerHTML = homepage
+        }
+    </script>
+</body>
+
+</html>

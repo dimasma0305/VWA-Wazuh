@@ -1,0 +1,5 @@
+FROM wazuh/wazuh-manager:4.3.10
+
+RUN apt-get update -y
+RUN apt-get install python3-pip -y
+RUN pip install requests
