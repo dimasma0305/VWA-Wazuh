@@ -2,6 +2,9 @@
     <rule id="100001" level="13">
         <regex>file \w+.php uploaded from ip \d+.\d+.\d+.\d+</regex>
         <description>PHP extension file uploaded</description>
+        <mitre>
+            <id>T1105</id>
+        </mitre>
     </rule>
 </group>
 
@@ -19,6 +22,9 @@
     <rule id="102001" level="13">
         <regex>"url":"file://\.+"</regex>
         <description>Local file inclusion detected</description>
+        <mitre>
+            <id>T1400</id>
+        </mitre>
     </rule>
 </group>
 
@@ -26,5 +32,8 @@
     <rule id="103001" level="13" ignore="10">
         <regex>sqlmap/\.+\(https://sqlmap.org\)</regex>
         <description>sqlmap Agent detected</description>
+        <mitre>
+            <id>T1190</id>
+        </mitre>
     </rule>
 </group>
