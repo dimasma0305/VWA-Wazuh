@@ -6,7 +6,7 @@ services:
   wazuh.manager:
     build: ./wazuh-manager
     hostname: wazuh.manager
-    restart: always
+    restart: on-failure
     ports:
       - "1514:1514"
       - "1515:1515"
@@ -45,7 +45,7 @@ services:
   wazuh.indexer:
     image: wazuh/wazuh-indexer:4.3.10
     hostname: wazuh.indexer
-    restart: always
+    restart: on-failure
     ports:
       - "9200:9200"
     environment:
@@ -72,7 +72,7 @@ services:
   wazuh.dashboard:
     image: wazuh/wazuh-dashboard:4.3.10
     hostname: wazuh.dashboard
-    restart: always
+    restart: on-failure
     ports:
       - 5601:5601
     environment:
